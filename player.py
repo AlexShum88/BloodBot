@@ -1,14 +1,18 @@
 """файл класу гравця де його методи реєстрації, дій,"""
 
+
 class Player:
-   def __init__(self,chatid, name, clan, blood):
+   def __init__(self,chatid):
        self.chat_id=chatid
-       self.__name: str=name
+       self.__name: str="undefined"
        self.__blood: int=0
+       self.clan = "undefined"
        self.__walking=list()  #список місчь куди ця падла вже ходила
        self.disciplines=[]  #виставляється вибором клану, чи все таки вручну?
        self.__is_ill=False
        self.now_walk=[]
+       self.curr_handl ="start"
+
 
    @property
    def walking(self):
@@ -46,8 +50,8 @@ class Player:
        return
 
 
-   def register(self):
-       return
+
+
    def set_dysciplines(self):
        return
    def eating(self):
@@ -56,6 +60,8 @@ class Player:
    def hunting(self):
        """метод для полювання любого. вибір типу полювання буде через параметр крові та дозвіл від майстра. """
        return
+
+
 
 """додати смерть персонажа"""
 
