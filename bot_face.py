@@ -2,9 +2,7 @@
 
 """набір фронтендів для взаємодій. Це єдине місце де код повинен бути завязаний на бота."""
 
-"""методи предоставляються для виконання в інші класи необхідний метод, що включає в себе велику кількість кейсів 
-метод прогулянки потребує чат гравця, сформовані варіанти (поставляються як кортеж, треа розбирати прямо в методі), 
-віддає кортеж з вибором гравця. """
+
 import telegram
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler,
@@ -17,9 +15,9 @@ logger = logging.getLogger(__name__)
 
 import data
 import player
-from game import Gamer
-
-cur_game = Gamer()
+from game import Gaming
+from sity import Sity
+cur_game = Gaming()
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -37,6 +35,8 @@ def error(update, context):
         self.dp.remove_handler(self.ms_handl)
         print("end")
         return"""
+#ctart player registration
+
 
 def start_reg(upd, cont):
     cur_game.regist_pl(upd.effective_chat.id, player.Player(upd.effective_chat.id))
@@ -112,10 +112,15 @@ def reg_disciplines(upd, cont):
                            "sent me sign, if you need something")
     player.curr_handl = "ready"
     cont.dispatcher.remove_handler(cont.dispatcher.handlers[0][-1])
+    if player.clan == "Malcovian":
+        player.disciplines=['Стремительность', 'Затемнение', 'Могущество']
     #print(cont.dispatcher.handlers[0])
     return
 
-def game_option(upd, con):
+#registration players metod end
+
+
+def game_option(upd, con): #дивиться, які опції для гравця можливі звіряючись з переліком в даті. видає кнопки
     keyb = []
     for opt, callb in data.player_options.items():
         bt = InlineKeyboardButton(text=opt, callback_data=callb)
@@ -126,7 +131,7 @@ def game_option(upd, con):
     con.dispatcher.add_handler(CallbackQueryHandler(option_dispatcher))
     return
 
-def option_dispatcher(upd, con):
+def option_dispatcher(upd, con):  #шняга, що читає калбек та вирішує який метод далі включити для плеєра
     cq = upd.callback_query.data
     con.dispatcher.remove_handler(con.dispatcher.handlers[0][-1])
     player = cur_game.players[upd.effective_chat.id]
@@ -134,6 +139,7 @@ def option_dispatcher(upd, con):
         player.curr_handl="eating"
         con.bot.send_message(chat_id=upd.effective_chat.id, text="how many blood you get?")
     elif cq == "sity":
+        to_sity(upd, con)
         return
     elif cq == "cast":
         return
@@ -145,11 +151,13 @@ def option_dispatcher(upd, con):
     return
 
 def drink_blood(upd, con):
-    """по ходу питаться они должны через коды. коды создаются и регистрируются в игре. и после использования стираются. сразу.
-    в скрейтч кодах можно шифоровать цфры?"""
+    """по ходу питаться они должны через коды. коды создаются и регистрируются в игре. и после использования стираются. сразу."""
+
     return
 
 def to_sity(upd, con):
+    player=cur_game.players[upd.effective_chat.id]
+    sit = Sity(player, bot=con.bot)
     return
 
 def main():

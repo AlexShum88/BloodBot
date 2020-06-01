@@ -54,12 +54,7 @@ class Player:
 
    def set_dysciplines(self):
        return
-   def eating(self):
-       """харчування в любому вигляді"""
-       return
-   def hunting(self):
-       """метод для полювання любого. вибір типу полювання буде через параметр крові та дозвіл від майстра. """
-       return
+
 
 
 

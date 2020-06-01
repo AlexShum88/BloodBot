@@ -5,7 +5,7 @@
 import player
 
 
-class Gamer:
+class Gaming:
     players= {}
     masters={}
 
