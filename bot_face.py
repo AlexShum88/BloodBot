@@ -113,7 +113,7 @@ def reg_disciplines(upd, cont):
     player.curr_handl = "ready"
     cont.dispatcher.remove_handler(cont.dispatcher.handlers[0][-1])
     if player.clan == "Malcovian":
-        player.disciplines=['Стремительность', 'Затемнение', 'Могущество']
+        player.disciplines=['Стремительность', 'Затемнение', 'Могущество', "Без применения дисциплин"]
     #print(cont.dispatcher.handlers[0])
     return
 
@@ -157,7 +157,7 @@ def drink_blood(upd, con):
 
 def to_sity(upd, con):
     player=cur_game.players[upd.effective_chat.id]
-    sit = Sity(player, bot=con.bot)
+    sit = Sity(player, context=con)
     return
 
 def main():

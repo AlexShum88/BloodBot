@@ -14,14 +14,16 @@ import random as roll
 
 
 class Sity:
-    def __init__(self, player, bot):
+    def __init__(self, player, context):
         self.player = player
-        self.bot = bot
+        self.context = context
         self.can_walk_to = []
+        self.walk_to = {}
         self.open_scene= ""
         self.dis_for_case = []
         self.check_cases()
-        self.form_var(case=self.get_one_case())
+        self.get_one_case()
+        self.form_var()
         self.make_message()
 
 
@@ -33,32 +35,43 @@ class Sity:
                 self.can_walk_to.append(key)
 
     def get_one_case(self):
-        go_to = 0
+        go_to = ""
         try:
             go_to=roll.choice(self.can_walk_to)
         except IndexError:
             print("no more variants to go")
-        return go_to
+        self.walk_to= go_to
 
-    def form_var (self, case):
+    def form_var (self):
         dis = self.player.disciplines
-        walk = data.data[case]
-        self.open_scene = case
-        self.dis_for_case = []
-        for key in walk:
+        walk = data.data[self.walk_to]
+        self.open_scene = self.walk_to
+        """"for key in walk:
             if key in dis:
-                self.dis_for_case.append(key)
+                self.dis_for_case.append(key)"""
 
-        self.dis_for_case.append(walk['Без применения дисциплин']) # add no DIS case
 
     def make_message(self):
         def make_board():
             keyb=[]
-            for dis in self.dis_for_case:
-                butt_text = dis.key + " need blood " + dis[dis.key][0]
-                butt = InlineKeyboardButton(text=butt_text, callback_data=dis.key)
+            for dis in self.player.disciplines:
+                butt_text = dis + " need blood " + str(data.data[self.walk_to][dis][0])
+                butt = InlineKeyboardButton(text=butt_text, callback_data=dis)
                 row=[butt]
                 keyb.append(row)
-                reply_markup=InlineKeyboardMarkup(keyb)
-                return reply_markup
-        self.bot.bot.send_message(chat_id=self.player.chat_id, text=self.open_scene, reply_markup=make_board())
+            reply_markup=InlineKeyboardMarkup(keyb)
+            return reply_markup
+        self.context.bot.send_message(chat_id=self.player.chat_id, text=self.open_scene, reply_markup=make_board())
+        self.context.dispatcher.add_handler(CallbackQueryHandler(self.listen_answer))
+
+    def listen_answer(self, upd, con):
+        cq = upd.callback_query.data
+        con.dispatcher.remove_handler(con.dispatcher.handlers[0][-1])
+        rr = roll.randint(1, 6)
+        if rr>=4:
+            text = data.data[self.walk_to][cq][1][0]
+        else:
+            text = data.data[self.walk_to][cq][2][0]
+
+        self.context.bot.send_message(chat_id=self.player.chat_id, text=text)
+
