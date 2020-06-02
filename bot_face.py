@@ -112,6 +112,8 @@ def reg_disciplines(upd, cont):
                            "sent me sign, if you need something")
     player.curr_handl = "ready"
     cont.dispatcher.remove_handler(cont.dispatcher.handlers[0][-1])
+
+    """ниже кусок тупо для теста. """
     if player.clan == "Malcovian":
         player.disciplines=['Стремительность', 'Затемнение', 'Могущество', "Без применения дисциплин"]
     #print(cont.dispatcher.handlers[0])
