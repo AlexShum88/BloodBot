@@ -11,7 +11,8 @@ class Player:
        self.disciplines=[]  #виставляється вибором клану, чи все таки вручну?
        self.__is_ill=False
        self.now_walk=[]
-       self.curr_handl ="start"
+       self.flag1 ="start"
+       self.flag2 = "start"
 
 
    @property

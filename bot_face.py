@@ -15,10 +15,10 @@ logger = logging.getLogger(__name__)
 
 import data
 import player
-from registration_player import Regist_pl
+import registration_player as rp
 from game import Gaming
 from sity import Sity
-from givingBLD import Give
+import givingBLD as gb
 cur_game = Gaming()
 
 def error(update, context):
@@ -26,36 +26,53 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
-"""" def start_listen(self, funname):
-        self.ms_handl = MessageHandler(Filters.text, funname)
-        self.dp.add_handler(self.ms_handl)
-        print("start")
-        return
-
-
-    def end_listen(self):
-        self.dp.remove_handler(self.ms_handl)
-        print("end")
-        return"""
-#ctart player registration
-def start_reg(upd, con):
-    rp = Regist_pl(cur_game, upd, con)
-    rp.start_reg(upd, con)
-    handl_setup(con)
 
 
 
-def mess_handl(upd, con):
-    print("listen mess")
-    comm=cur_game.players[upd.effective_chat.id].curr_handl
-    print(comm)
 
-    if comm == "ready":
+
+def mess_dispatcer(upd, con):
+    """сюда поступает основной поток текстовых сообщений от пользователя
+    и производится выборка что дальше этому пользователю запускать"""
+    flag1 = cur_game.players[upd.effective_chat.id].flag1
+    print(flag1)
+    if flag1 == "ready":
         game_option(upd, con)
+    if flag1 == "reg":
+        rp.messs_handl(upd, con, cur_game)
     return
 
 
-def game_option(upd, con): #дивиться, які опції для гравця можливі звіряючись з переліком в даті. видає кнопки
+def callback_dispatcher(upd, con):
+    """эта шняга активируется когда прилетает саллбек от нажатия кнопки. он адолжна сначала посмотреть на флажок юзера,
+    и решить с какой группой соотносить прилетевший каллбек. ну и потом соотнести и вызвать необходимую команду"""
+    cq = upd.callback_query.data
+    player = cur_game.players[upd.effective_chat.id]
+    flag1 = player.flag1
+    flag2 = player.flag2
+
+    if flag2 =="blcl":
+        rp.reg_disciplines(upd, con, cur_game)
+    elif flag2=="givebld":
+        gb.resualt(upd, con, cur_game)
+
+    if flag1=="ready":
+        if cq == "give_bld":
+            gb.mess(upd, con, cur_game)
+        elif cq == "sity":
+            to_sity(upd, con)
+            return
+        elif cq == "cast":
+            return
+        elif cq == "fight":
+            return
+        elif cq == "code":
+            return
+
+    return
+
+def game_option(upd, con):
+    """эта шняга смотрит какие опции возможны для игрока и выдает соотвествующий список кнопок"""
     keyb = []
     for opt, callb in data.player_options.items():
         bt = InlineKeyboardButton(text=opt, callback_data=callb)
@@ -63,30 +80,12 @@ def game_option(upd, con): #дивиться, які опції для грав�
         keyb.append(row)
     reply_markup = InlineKeyboardMarkup(keyb)
     upd.message.reply_text('Please, choose one:', reply_markup=reply_markup)
-    con.dispatcher.add_handler(CallbackQueryHandler(option_dispatcher))
     return
 
-def option_dispatcher(upd, con):  #шняга, що читає калбек та вирішує який метод далі включити для плеєра
-    cq = upd.callback_query.data
-    con.dispatcher.remove_handler(con.dispatcher.handlers[0][-1])
-    player = cur_game.players[upd.effective_chat.id]
-    if cq == "give_bld":
-        vgb= Give(player,cur_game.blood_base, con)
-        vgb.mess(upd, con)
-        handl_setup (con)
-        for bl, sw in cur_game.blood_base.items():
-            print(bl, sw)
-    elif cq == "sity":
-        to_sity(upd, con)
-        return
-    elif cq == "cast":
-        return
-    elif cq == "fight":
-        return
-    elif cq == "code":
-        return
+def start_reg(upd, con):
+    """игрок стартует отсюда: начало регистрации"""
+    rp.start_reg(upd, con, cur_game)
 
-    return
 
 def drink_blood(upd, con):
     """по ходу питаться они должны через коды. коды создаются и регистрируются в игре. и после использования стираются. сразу."""
@@ -95,11 +94,9 @@ def drink_blood(upd, con):
 
 def to_sity(upd, con):
     player=cur_game.players[upd.effective_chat.id]
-    sit = Sity(player, bot=con.bot)
+    sit = Sity(player, con)
     return
 
-def handl_setup (con):
-    con.dispatcher.add_handler(MessageHandler(Filters.text, mess_handl))
 
 
 def main():
@@ -108,7 +105,10 @@ def main():
         'connect_timeout':7 })
     dp = updater.dispatcher
     start_handler = CommandHandler('start', start_reg)
-    dp.add_handler(start_handler, group=0)
+    dp.add_handler(start_handler, group=1)
+    dp.add_handler(MessageHandler(Filters.text, mess_dispatcer), group=1)
+    dp.add_handler(CallbackQueryHandler(callback_dispatcher), group=1)
+
     dp.add_error_handler(error)
     updater.start_polling()
 

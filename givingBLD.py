@@ -11,38 +11,26 @@ import data
 import player
 from blood import Blood
 
-class Give:
-    def __init__(self, pl:player, base, con):
-        self.plr = pl
-        self.dp = con.dispatcher
-        self.base = base
 
-
-    def handl_remover(self):
-        for handl in self.dp.handlers[0]:
-            self.dp.remove_handler(handl)
-
-
-    def bld_var(self):
-        keyb=[]
-        for bld in range(self.plr.blood):
-            bt=InlineKeyboardButton(text=bld, callback_data=bld)
-            row=[bt]
-            keyb.append(row)
-        bt=InlineKeyboardButton(text="drop of blood", callback_data=0)
+def bld_var(upd, cur_game):
+    keyb=[]
+    for bld in range(cur_game.players[upd.effective_chat.id].blood):
+        bt=InlineKeyboardButton(text=bld, callback_data=bld)
         row=[bt]
         keyb.append(row)
-        reply_markup=InlineKeyboardMarkup(keyb)
-        return reply_markup
+    bt=InlineKeyboardButton(text="drop of blood", callback_data=0)
+    row=[bt]
+    keyb.append(row)
+    reply_markup=InlineKeyboardMarkup(keyb)
+    return reply_markup
 
-    def mess(self, upd, con):
-        self.handl_remover()
-        self.dp.add_handler(CallbackQueryHandler(self.resualt))
-        upd.callback_query.message.reply_text("how many blood you want to give?", reply_markup=self.bld_var())
+def mess(upd, con, cur_game):
+    upd.callback_query.message.reply_text("how many blood you want to give?", reply_markup=bld_var(upd, cur_game))
+    cur_game.players[upd.effective_chat.id].flag2="givebld"
 
-    def resualt(self,upd, con):
-        cq = upd.callback_query.data
-        bld =Blood(self.base, cq, self.plr.is_ill, self.plr)
-        upd.callback_query.message.reply_text(text="you give {n} blood point. \n"
-                                    "its code {c}".format(n=cq, c=bld.name))
-        self.handl_remover()
+def resualt(upd, con, cur_game):
+    cq = upd.callback_query.data
+    bld =Blood(cur_game.blood_base, cq, cur_game.players[upd.effective_chat.id].is_ill, cur_game.players[upd.effective_chat.id])
+    upd.callback_query.message.reply_text(text="you give {n} blood point. \n"
+                                "its code {c}".format(n=cq, c=bld.name))
+    cur_game.players[upd.effective_chat.id].flag2 ="ready"

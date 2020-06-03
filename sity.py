@@ -12,7 +12,7 @@ import data
 
 import random as roll
 
-
+"""а вот запускать его из плеера может быть хорошей идеей. тогда мжоно будет по плееру добраться к обработчику"""
 class Sity:
     def __init__(self, player, context):
         self.player = player
