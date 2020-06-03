@@ -8,6 +8,7 @@ import player
 class Gaming:
     players= {}
     masters={}
+    blood_base = {}
 
     def regist_pl(self, id:int, play:player.Player):
         self.players[id]=play

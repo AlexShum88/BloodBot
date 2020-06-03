@@ -15,8 +15,10 @@ logger = logging.getLogger(__name__)
 
 import data
 import player
+from registration_player import Regist_pl
 from game import Gaming
 from sity import Sity
+from givingBLD import Give
 cur_game = Gaming()
 
 def error(update, context):
@@ -36,88 +38,21 @@ def error(update, context):
         print("end")
         return"""
 #ctart player registration
+def start_reg(upd, con):
+    rp = Regist_pl(cur_game, upd, con)
+    rp.start_reg(upd, con)
+    handl_setup(con)
 
 
-def start_reg(upd, cont):
-    cur_game.regist_pl(upd.effective_chat.id, player.Player(upd.effective_chat.id))
-    reg(upd, cont)
-    return
 
 def mess_handl(upd, con):
     print("listen mess")
-    comm = cur_game.players[upd.effective_chat.id].curr_handl
+    comm=cur_game.players[upd.effective_chat.id].curr_handl
     print(comm)
-    if comm == "name":
-        reg_name(upd, con)
-    elif comm == "blood":
-        reg_blood_clan(upd, con)
-    elif comm == "ready":
+
+    if comm == "ready":
         game_option(upd, con)
-    elif comm == "eating":
-        drink_blood(upd,con)
-    else:
-        reg(upd, con)
     return
-
-def change_player_handl(upd, new_handl):
-    cur_game.players[upd.effective_chat.id].curr_handl = new_handl
-
-
-def reg(upd, cont):
-    cont.bot.send_message(chat_id=upd.effective_chat.id, text="Im listen for your name")
-    change_player_handl(upd, "name")
-    return
-
-
-def reg_name(upd, cont):
-    cur_game.players[upd.effective_chat.id].name = upd.message.text
-    cont.bot.send_message(chat_id=upd.effective_chat.id, text="Im listen for your blood")
-    change_player_handl(upd, "blood")
-    return
-
-def reg_blood_clan(upd, cont):
-    if str(upd.message.text).isnumeric():
-        bl = int(upd.message.text)
-        if bl<10 and bl>0:
-            cur_game.players[upd.effective_chat.id].blood = upd.message.text
-        else:
-            cont.bot.send_message(chat_id=upd.effective_chat.id, text="blood must be >0 and <10")
-            return
-    else:
-        cont.bot.send_message(chat_id=upd.effective_chat.id, text="enter num")
-        return
-    cont.bot.send_message(chat_id=upd.effective_chat.id, text="Im listen for your clan")
-    reg_clan(upd, cont)
-    #change_player_handl(cur_game.players[upd.effective_chat.id], "clan")
-    return
-
-def reg_clan(upd, cont):
-    keyb = []
-    for clan in data.clanes:
-        bt = InlineKeyboardButton(text=clan, callback_data=clan)
-        row = [bt]
-        keyb.append(row)
-    reply_markup = InlineKeyboardMarkup(keyb)
-    upd.message.reply_text('Please, choose one:', reply_markup=reply_markup)
-    cont.dispatcher.add_handler(CallbackQueryHandler(reg_disciplines))
-    #print(cont.dispatcher.handlers[0])
-    return
-
-def reg_disciplines(upd, cont):
-    cq = upd.callback_query.data
-    player = cur_game.players[upd.effective_chat.id]
-    cur_game.players[upd.effective_chat.id].clan = cq
-    print(player.name, player.blood, player.clan)
-    cont.bot.send_message(chat_id=upd.effective_chat.id, text="you registration complete \n"
-                           "sent me sign, if you need something")
-    player.curr_handl = "ready"
-    cont.dispatcher.remove_handler(cont.dispatcher.handlers[0][-1])
-    if player.clan == "Malcovian":
-        player.disciplines=['Стремительность', 'Затемнение', 'Могущество']
-    #print(cont.dispatcher.handlers[0])
-    return
-
-#registration players metod end
 
 
 def game_option(upd, con): #дивиться, які опції для гравця можливі звіряючись з переліком в даті. видає кнопки
@@ -135,9 +70,12 @@ def option_dispatcher(upd, con):  #шняга, що читає калбек та
     cq = upd.callback_query.data
     con.dispatcher.remove_handler(con.dispatcher.handlers[0][-1])
     player = cur_game.players[upd.effective_chat.id]
-    if cq == "bld":
-        player.curr_handl="eating"
-        con.bot.send_message(chat_id=upd.effective_chat.id, text="how many blood you get?")
+    if cq == "give_bld":
+        vgb= Give(player,cur_game.blood_base, con)
+        vgb.mess(upd, con)
+        handl_setup (con)
+        for bl, sw in cur_game.blood_base.items():
+            print(bl, sw)
     elif cq == "sity":
         to_sity(upd, con)
         return
@@ -160,16 +98,17 @@ def to_sity(upd, con):
     sit = Sity(player, bot=con.bot)
     return
 
+def handl_setup (con):
+    con.dispatcher.add_handler(MessageHandler(Filters.text, mess_handl))
+
+
 def main():
     updater = Updater(token=data.token, use_context=True, request_kwargs={
         'read_timeout':6,
         'connect_timeout':7 })
     dp = updater.dispatcher
     start_handler = CommandHandler('start', start_reg)
-    dp.add_handler(start_handler)
-    ms_handler = MessageHandler(Filters.text, mess_handl)
-    dp.add_handler(ms_handler)
-
+    dp.add_handler(start_handler, group=0)
     dp.add_error_handler(error)
     updater.start_polling()
 
