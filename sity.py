@@ -29,18 +29,17 @@ class Sity:
     def check_cases(self):
         """формирует пул доступных случаев"""
         for key in data.data.keys():
-            if key in self.player.now_walk:
+            if key in self.player.walking:
                 continue
             else:
                 self.can_walk_to.append(key)
 
     def get_one_case(self):
         """выбирает один случай из доступных"""
-        go_to = ""
         try:
-            go_to=roll.choice(self.can_walk_to)
+            go_to = roll.choice(self.can_walk_to)
         except IndexError:
-            print("no more variants to go")
+            go_to = "no more variants to go"
         self.walk_to = go_to
 
 
@@ -77,6 +76,8 @@ class Sity:
 
         self.player.blood += resualt[-1]
         self.context.bot.send_message(chat_id=self.player.chat_id, text=resualt[0])
+        self.player.walking.append(self.walk_to)
+        self.player.flag2 = "ready"
 
         if resualt[-1]>0:
             """если игроку удалось поккушать, идет проверка на заражен или нет. при 1 - да. 

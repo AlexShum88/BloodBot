@@ -19,6 +19,7 @@ import registration_player as rp
 from game import Gaming
 from sity import Sity
 import givingBLD as gb
+import eating as eat
 cur_game = Gaming()
 
 def error(update, context):
@@ -32,10 +33,13 @@ def mess_dispatcer(upd, con):
     и производится выборка что дальше этому пользователю запускать"""
     flag1 = cur_game.players[upd.effective_chat.id].flag1
     print(flag1)
-    if flag1 == "ready":
-        game_option(upd, con)
     if flag1 == "reg":
         rp.messs_handl(upd, con, cur_game)
+    if flag1 == "ready":
+        game_option(upd, con)
+    elif flag1 == "eat":
+        eat.eating(upd, con, cur_game)
+
     return
 
 
@@ -56,7 +60,7 @@ def callback_dispatcher(upd, con):
     elif flag2 == "sity":
         player.sity.listen_answer(upd, con)
         player.sity = None
-        player.flag2 = "ready"
+
 
     if flag1 == "ready" and flag2 == "ready":
         if cq == "give_bld":
@@ -70,7 +74,10 @@ def callback_dispatcher(upd, con):
             return
         elif cq == "code":
             return
-        elif cq == "pldt":
+        elif cq == "bld":
+            player.flag1="eat"
+            eat.mess(upd, con)
+        elif cq == "pldt": #player data
             upd.callback_query.message.reply_text(str(player))
         else:
             upd.callback_query.message.reply_text("please, answer for another qestion")
@@ -91,7 +98,10 @@ def game_option(upd, con):
 
 def start_reg(upd, con):
     """игрок стартует отсюда: начало регистрации"""
-    rp.start_reg(upd, con, cur_game)
+    if upd.effective_chat.id in cur_game.players:
+        mess_dispatcer(upd, con)
+    else:
+        rp.start_reg(upd, con, cur_game)
 
 
 def drink_blood(upd, con):
@@ -116,7 +126,7 @@ def main():
     dp.add_handler(start_handler, group=1)
     dp.add_handler(MessageHandler(Filters.text, mess_dispatcer), group=1)
     dp.add_handler(CallbackQueryHandler(callback_dispatcher), group=1)
-    dp.add_handler(CommandHandler('menu', game_option))
+    #dp.add_handler(CommandHandler('menu', game_option))
 
     dp.add_error_handler(error)
     updater.start_polling()
