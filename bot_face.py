@@ -27,10 +27,6 @@ def error(update, context):
 
 
 
-
-
-
-
 def mess_dispatcer(upd, con):
     """сюда поступает основной поток текстовых сообщений от пользователя
     и производится выборка что дальше этому пользователю запускать"""
@@ -51,12 +47,18 @@ def callback_dispatcher(upd, con):
     flag1 = player.flag1
     flag2 = player.flag2
 
-    if flag2 =="blcl":
+    if flag2 == "blcl":
         rp.reg_disciplines(upd, con, cur_game)
-    elif flag2=="givebld":
+
+    elif flag2 == "givebld":
         gb.resualt(upd, con, cur_game)
 
-    if flag1=="ready":
+    elif flag2 == "sity":
+        player.sity.listen_answer(upd, con)
+        player.sity = None
+        player.flag2 = "ready"
+
+    if flag1 == "ready" and flag2 == "ready":
         if cq == "give_bld":
             gb.mess(upd, con, cur_game)
         elif cq == "sity":
@@ -67,6 +69,11 @@ def callback_dispatcher(upd, con):
         elif cq == "fight":
             return
         elif cq == "code":
+            return
+        elif cq == "pldt":
+            upd.callback_query.message.reply_text(str(player))
+        else:
+            upd.callback_query.message.reply_text("please, answer for another qestion")
             return
 
     return
@@ -94,7 +101,8 @@ def drink_blood(upd, con):
 
 def to_sity(upd, con):
     player=cur_game.players[upd.effective_chat.id]
-    sit = Sity(player, con)
+    player.sity = Sity(player, con)
+    player.flag2 = "sity"
     return
 
 
@@ -108,6 +116,7 @@ def main():
     dp.add_handler(start_handler, group=1)
     dp.add_handler(MessageHandler(Filters.text, mess_dispatcer), group=1)
     dp.add_handler(CallbackQueryHandler(callback_dispatcher), group=1)
+    dp.add_handler(CommandHandler('menu', game_option))
 
     dp.add_error_handler(error)
     updater.start_polling()

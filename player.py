@@ -1,5 +1,5 @@
 """файл класу гравця де його методи реєстрації, дій,"""
-
+import sity
 
 class Player:
    def __init__(self,chatid):
@@ -11,8 +11,9 @@ class Player:
        self.disciplines=[]  #виставляється вибором клану, чи все таки вручну?
        self.__is_ill=False
        self.now_walk=[]
-       self.flag1 ="start"
-       self.flag2 = "start"
+       self.flag1 ="start" #its pl status: ono registration, on game, on torpor, dead?....
+       self.flag2 = "start" #its for change callback listener
+       self.sity: sity.Sity
 
 
    @property
@@ -29,8 +30,10 @@ class Player:
 
    @blood.setter
    def blood(self, bl):
-       if bl.isnumeric():
+       if type(bl)==int or bl.isnumeric():
            self.__blood=int(bl)
+           if self.__blood<0:
+               self.__blood=0
 
    @property
    def name(self):
@@ -51,7 +54,12 @@ class Player:
        return
 
 
-
+   def __str__(self):
+        s= f"Name {self.__name} \n" \
+           f"blood {self.__blood} \n" \
+           f"ill {self.__is_ill}\n" \
+           f"flag1 {self.flag1}, flag2 {self.flag2}"
+        return s
 
    def set_dysciplines(self):
        return

@@ -14,13 +14,13 @@ from blood import Blood
 
 def bld_var(upd, cur_game):
     keyb=[]
-    for bld in range(cur_game.players[upd.effective_chat.id].blood):
-        bt=InlineKeyboardButton(text=bld, callback_data=bld)
+    for bld in range(cur_game.players[upd.effective_chat.id].blood+1):
+        if bld == 0:
+            bt=InlineKeyboardButton(text="drop of blood", callback_data=0)
+        else:
+            bt=InlineKeyboardButton(text=bld, callback_data=bld)
         row=[bt]
         keyb.append(row)
-    bt=InlineKeyboardButton(text="drop of blood", callback_data=0)
-    row=[bt]
-    keyb.append(row)
     reply_markup=InlineKeyboardMarkup(keyb)
     return reply_markup
 
@@ -30,7 +30,14 @@ def mess(upd, con, cur_game):
 
 def resualt(upd, con, cur_game):
     cq = upd.callback_query.data
-    bld =Blood(cur_game.blood_base, cq, cur_game.players[upd.effective_chat.id].is_ill, cur_game.players[upd.effective_chat.id])
+    pl = cur_game.players[upd.effective_chat.id]
+    if type(cq)==int or cq.isnumeric():
+        pl.blood-=int(cq)
+    else:
+        upd.callback_query.message.reply_text(text="wrong callback")
+        return
+    bld =Blood(cur_game.blood_base, cq, pl.is_ill, pl)
+    upd.callback_query.message.edit_reply_markup(reply_markup="")
     upd.callback_query.message.reply_text(text="you give {n} blood point. \n"
                                 "its code {c}".format(n=cq, c=bld.name))
     cur_game.players[upd.effective_chat.id].flag2 ="ready"

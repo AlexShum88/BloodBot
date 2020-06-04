@@ -51,22 +51,22 @@ class Sity:
         def make_board():
             keyb=[]
             for dis in self.player.disciplines:
-                butt_text = dis + " need blood " + str(data.data[self.walk_to][dis][0])
-                butt = InlineKeyboardButton(text=butt_text, callback_data=dis)
-                row=[butt]
-                keyb.append(row)
+                if self.player.blood >= int(data.data[self.walk_to][dis][0]):
+                    butt_text = dis + " need blood " + str(data.data[self.walk_to][dis][0])
+                    butt = InlineKeyboardButton(text=butt_text, callback_data=dis)
+                    row=[butt]
+                    keyb.append(row)
             reply_markup=InlineKeyboardMarkup(keyb)
             return reply_markup
 
         self.context.bot.send_message(chat_id=self.player.chat_id, text=self.walk_to, reply_markup=make_board())
-        self.context.dispatcher.add_handler(CallbackQueryHandler(self.listen_answer))
+
 
     def listen_answer(self, upd, con):
         """слушает ответ игрока, получив - уберает слушатель, псоле чего делает проверку на удачность случая.
         проводит изменения параметров игрока. мне не нравится привязка по индексу.
         надо как-то реализовать увеличение маскарада"""
         dis = upd.callback_query.data
-        con.dispatcher.remove_handler(con.dispatcher.handlers[0][-1])
         self.player.blood -= data.data[self.walk_to][dis][0]
 
         rr = roll.randint(1, 6)
@@ -75,7 +75,7 @@ class Sity:
         else:
             resualt = data.data[self.walk_to][dis][2]
 
-        self.player.blood -= resualt[-1]
+        self.player.blood += resualt[-1]
         self.context.bot.send_message(chat_id=self.player.chat_id, text=resualt[0])
 
         if resualt[-1]>0:

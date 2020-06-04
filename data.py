@@ -12,7 +12,8 @@ roll_fail_lvl_no_dis = 3
 roll_ill_lvl: int = 1
 text_end_sity = "no more variants to go"
 clanes =["Nosferatu", "Tremere", "Toreador", "Ventru", "Brucha", "Malcovian"]
-player_options = {"drink blood":"bld", "sity":"sity", "Use disceplines":"cast", "Fight":"fight", "Enter code":"code", "give blood": "give_bld"}
+player_options = {"drink blood":"bld", "sity":"sity", "Use disceplines":"cast", "Fight":"fight", "Enter code":"code",
+    "give blood": "give_bld", "player data(for test)":"pldt"}
 data={
     'В подворотне вы замечаете одинокого забулдыгу, что стоит у стены, опершись о нее рукой, и мочится… А еще рыгает.':{
         'Стремительность':[1, [
