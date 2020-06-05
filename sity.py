@@ -40,7 +40,7 @@ class Sity:
         try:
             go_to = roll.choice(self.can_walk_to)
         except IndexError:
-            go_to = "no more variants to go"
+            go_to = data.pl_sity_no_more_walk
         self.walk_to = go_to
 
 
@@ -52,7 +52,7 @@ class Sity:
             keyb=[]
             for dis in self.player.disciplines:
                 if self.player.blood >= int(data.data[self.walk_to][dis][0]):
-                    butt_text = dis + " need blood " + str(data.data[self.walk_to][dis][0])
+                    butt_text = dis + data.pl_sity_butt_need_blood + str(data.data[self.walk_to][dis][0])
                     butt = InlineKeyboardButton(text=butt_text, callback_data=dis)
                     row=[butt]
                     keyb.append(row)
@@ -70,7 +70,7 @@ class Sity:
         self.player.blood -= data.data[self.walk_to][dis][0]
 
         rr = roll.randint(1, 6)
-        if rr>=4:
+        if rr >= data.rand_dis_fail:
             resualt = data.data[self.walk_to][dis][1]
         else:
             resualt = data.data[self.walk_to][dis][2]
@@ -84,6 +84,6 @@ class Sity:
             """если игроку удалось поккушать, идет проверка на заражен или нет. при 1 - да. 
             можно выставить один из параметров в рандомизаторе на динамический"""
             rr = roll.randint(1, 10)
-            if rr ==1:
+            if rr >= data.rand_ill_chanse:
                 self.player.is_ill=True
 

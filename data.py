@@ -4,7 +4,8 @@
 token = '801929360:AAF_x6vrGk6JGargW4RsDkzxUaAa5FXMQqs'
 
 no_dis_txt = 'Без применения дисциплин'
-text_end_sity = "no more variants to go"
+
+#inner commands
 pl_flag1_reg = 1
 pl_flag1_ready = 2
 pl_flag1_eat = 3
@@ -14,14 +15,48 @@ pl_flag2_sity = 5
 pl_flag2_givebld = 6
 pl_flag2_ready = 22
 
-rand_dis_fail = 7
-rand_no_dis_fail = 8
 
+# rand parameters
+rand_dis_fail = 3
+rand_no_dis_fail = 5
+rand_ill_chanse = 3
+
+#text block
+pl_mess_ent_code = "please, enter code"
+pl_mess_wrong_code = "its wrong code, canseling enter code"
+pl_mess_right_code = "ok"
+
+pl_mess_how_bld_give = "how many blood you want to give?"
+
+def pl_mess_bld_give_succs(cq, bld):
+    text = "you give {n} blood point its code {c}".format(n=cq, c=bld.name)
+    return text
+
+pl_mess_bld_give_wrong_clb = "wrong callback"
+pl_mess_bld_point = "give only drop of blood"
+
+pl_sity_butt_need_blood = " need blood "
+pl_sity_no_more_walk = "no more variants to walk tru"
+
+reg_listen_name = "Im listen to your name "
+reg_listen_blood = "Iv listen for your blood"
+reg_listen_clan = "Im listen for your clan"
+reg_shoose_clan = "Please, choose your family"
+reg_ready = "Your registration complete"
+reg_blood_wrong_diapasone = "enter num from 1 to 10"
+reg_blood_nonum = "enter num, please"
+
+menu_chouse = "Your variants to do "
+menu_wrong_callback = "pleace, answer for current question"
+
+player_options = {"drink blood":"bld", "sity":"sity", "Use disceplines":"cast", "Fight":"fight",
+    "give blood": "give_bld", "player data(for test)":"pldt"}
 
 
 clanes =["Nosferatu", "Tremere", "Toreador", "Ventru", "Brucha", "Malcovian"]
-player_options = {"drink blood":"bld", "sity":"sity", "Use disceplines":"cast", "Fight":"fight", "Enter code":"code",
-    "give blood": "give_bld", "player data(for test)":"pldt"}
+
+
+
 data={
     'В подворотне вы замечаете одинокого забулдыгу, что стоит у стены, опершись о нее рукой, и мочится… А еще рыгает.':{
         'Стремительность':[1, [

@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 
 import data
-import player
 import registration_player as rp
 from game import Gaming
 from sity import Sity
@@ -63,22 +62,16 @@ def callback_dispatcher(upd, con):
 
 
     if flag1 == data.pl_flag1_ready and flag2 == data.pl_flag2_ready:
-        if cq == "give_bld":
+        if cq == data.player_options["give blood"]:
             gb.mess(upd, con, cur_game)
-        elif cq == "sity":
+        elif cq == data.player_options["sity"]:
             to_sity(upd, con)
-        elif cq == "cast":
-            return
-        elif cq == "fight":
-            return
-        elif cq == "code":
-            return
-        elif cq == "bld":
+        elif cq == data.player_options["drink blood"]:
             eat.mess(upd, con, cur_game)
-        elif cq == "pldt": #player data
+        elif cq == data.player_options["player data(for test)"]: #player data
             upd.callback_query.message.reply_text(str(player))
         else:
-            upd.callback_query.message.reply_text("please, answer for another qestion")
+            upd.callback_query.message.reply_text(data.menu_wrong_callback)
             return
 
     return
@@ -91,7 +84,7 @@ def game_option(upd, con):
         row = [bt]
         keyb.append(row)
     reply_markup = InlineKeyboardMarkup(keyb)
-    upd.message.reply_text('Please, choose one:', reply_markup=reply_markup)
+    upd.message.reply_text(data.menu_chouse, reply_markup=reply_markup)
     return
 
 def start_reg(upd, con):
@@ -102,15 +95,9 @@ def start_reg(upd, con):
         rp.start_reg(upd, con, cur_game)
 
 
-def drink_blood(upd, con):
-    """по ходу питаться они должны через коды. коды создаются и регистрируются в игре. и после использования стираются. сразу."""
-
-    return
-
 def to_sity(upd, con):
     player=cur_game.players[upd.effective_chat.id]
     player.sity = Sity(player, con)
-
     return
 
 
