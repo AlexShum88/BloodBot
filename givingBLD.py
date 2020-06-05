@@ -26,7 +26,7 @@ def bld_var(upd, cur_game):
 
 def mess(upd, con, cur_game):
     upd.callback_query.message.reply_text("how many blood you want to give?", reply_markup=bld_var(upd, cur_game))
-    cur_game.players[upd.effective_chat.id].flag2="givebld"
+    cur_game.players[upd.effective_chat.id].flag2=data.pl_flag2_givebld
 
 def resualt(upd, con, cur_game):
     cq = upd.callback_query.data
@@ -40,4 +40,4 @@ def resualt(upd, con, cur_game):
     upd.callback_query.message.edit_reply_markup(reply_markup="")
     upd.callback_query.message.reply_text(text="you give {n} blood point. \n"
                                 "its code {c}".format(n=cq, c=bld.name))
-    cur_game.players[upd.effective_chat.id].flag2 ="ready"
+    cur_game.players[upd.effective_chat.id].flag2 =data.pl_flag2_ready

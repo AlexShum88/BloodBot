@@ -2,15 +2,23 @@
 
 
 token = '801929360:AAF_x6vrGk6JGargW4RsDkzxUaAa5FXMQqs'
-wb = "test.xlsx"
-data_fileName = "newdisc"
-wr_data = "wrong data"
-player_hello = "Enter you name, please, you clan and blood count"
-roll_fail_lvl: int = 2
+
 no_dis_txt = 'Без применения дисциплин'
-roll_fail_lvl_no_dis = 3
-roll_ill_lvl: int = 1
 text_end_sity = "no more variants to go"
+pl_flag1_reg = 1
+pl_flag1_ready = 2
+pl_flag1_eat = 3
+
+pl_flag2_reg_dis = 4
+pl_flag2_sity = 5
+pl_flag2_givebld = 6
+pl_flag2_ready = 22
+
+rand_dis_fail = 7
+rand_no_dis_fail = 8
+
+
+
 clanes =["Nosferatu", "Tremere", "Toreador", "Ventru", "Brucha", "Malcovian"]
 player_options = {"drink blood":"bld", "sity":"sity", "Use disceplines":"cast", "Fight":"fight", "Enter code":"code",
     "give blood": "give_bld", "player data(for test)":"pldt"}

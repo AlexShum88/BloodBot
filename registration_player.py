@@ -18,7 +18,7 @@ def messs_handl(upd, con, cur_game):
         reg_name(upd, con, cur_game)
     elif comm == "blood":
         reg_blood_clan(upd, con, cur_game)
-    elif comm == "ready":
+    elif comm == data.pl_flag2_ready:
         return
 
     return
@@ -27,7 +27,7 @@ def messs_handl(upd, con, cur_game):
 def start_reg(upd, cont, cur_game):
     cur_game.regist_pl(upd.effective_chat.id, player.Player(upd.effective_chat.id))
     cont.bot.send_message(chat_id=upd.effective_chat.id, text="Im listen for your name")
-    cur_game.players[upd.effective_chat.id].flag1 = "reg"
+    cur_game.players[upd.effective_chat.id].flag1 = data.pl_flag1_reg
     change_player_handl(upd, "name", cur_game)
     return
 
@@ -56,7 +56,7 @@ def reg_blood_clan(upd, cont, cur_game):
         return
     cont.bot.send_message(chat_id=upd.effective_chat.id, text="Im listen for your clan")
     reg_clan(upd, cont)
-    cur_game.players[upd.effective_chat.id].flag2="blcl"
+    cur_game.players[upd.effective_chat.id].flag2=data.pl_flag2_reg_dis
     return
 
 def reg_clan(upd, cont):
@@ -76,8 +76,8 @@ def reg_disciplines(upd, cont, cur_game):
     print(player.name, player.blood, player.clan)
     cont.bot.send_message(chat_id=upd.effective_chat.id, text="you registration complete \n"
                             "sent me sign, if you need something")
-    player.flag1 = "ready"
-    player.flag2 = "ready"
+    player.flag1 = data.pl_flag1_ready
+    player.flag2 = data.pl_flag2_ready
 
     if player.clan == "Malcovian":
         player.disciplines=['Стремительность', 'Затемнение', 'Могущество', data.no_dis_txt]

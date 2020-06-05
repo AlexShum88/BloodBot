@@ -33,11 +33,11 @@ def mess_dispatcer(upd, con):
     и производится выборка что дальше этому пользователю запускать"""
     flag1 = cur_game.players[upd.effective_chat.id].flag1
     print(flag1)
-    if flag1 == "reg":
+    if flag1 == data.pl_flag1_reg:
         rp.messs_handl(upd, con, cur_game)
-    if flag1 == "ready":
+    if flag1 == data.pl_flag1_ready:
         game_option(upd, con)
-    elif flag1 == "eat":
+    elif flag1 == data.pl_flag1_eat:
         eat.eating(upd, con, cur_game)
 
     return
@@ -51,23 +51,22 @@ def callback_dispatcher(upd, con):
     flag1 = player.flag1
     flag2 = player.flag2
 
-    if flag2 == "blcl":
+    if flag2 == data.pl_flag2_reg_dis:
         rp.reg_disciplines(upd, con, cur_game)
 
-    elif flag2 == "givebld":
+    elif flag2 == data.pl_flag2_givebld:
         gb.resualt(upd, con, cur_game)
 
-    elif flag2 == "sity":
+    elif flag2 == data.pl_flag2_sity:
         player.sity.listen_answer(upd, con)
         player.sity = None
 
 
-    if flag1 == "ready" and flag2 == "ready":
+    if flag1 == data.pl_flag1_ready and flag2 == data.pl_flag2_ready:
         if cq == "give_bld":
             gb.mess(upd, con, cur_game)
         elif cq == "sity":
             to_sity(upd, con)
-            return
         elif cq == "cast":
             return
         elif cq == "fight":
@@ -75,8 +74,7 @@ def callback_dispatcher(upd, con):
         elif cq == "code":
             return
         elif cq == "bld":
-            player.flag1="eat"
-            eat.mess(upd, con)
+            eat.mess(upd, con, cur_game)
         elif cq == "pldt": #player data
             upd.callback_query.message.reply_text(str(player))
         else:
@@ -112,7 +110,7 @@ def drink_blood(upd, con):
 def to_sity(upd, con):
     player=cur_game.players[upd.effective_chat.id]
     player.sity = Sity(player, con)
-    player.flag2 = "sity"
+
     return
 
 

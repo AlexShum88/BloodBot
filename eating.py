@@ -1,4 +1,8 @@
-def mess(upd, con):
+import data
+
+def mess(upd, con, cur_game):
+    player=cur_game.players[upd.effective_chat.id]
+    player.flag1=data.pl_flag1_eat
     upd.callback_query.message.reply_text("enter code")
 
 def eating ( upd, con, cur_game):
@@ -13,4 +17,4 @@ def eating ( upd, con, cur_game):
     else:
         upd.message.reply_text("this is wrong code")
 
-    player.flag1 = "ready"
+    player.flag1 = data.pl_flag1_ready

@@ -24,6 +24,7 @@ class Sity:
         self.check_cases()
         self.get_one_case()
         self.make_message()
+        self.player.flag2=data.pl_flag2_sity
 
 
     def check_cases(self):
@@ -77,7 +78,7 @@ class Sity:
         self.player.blood += resualt[-1]
         self.context.bot.send_message(chat_id=self.player.chat_id, text=resualt[0])
         self.player.walking.append(self.walk_to)
-        self.player.flag2 = "ready"
+        self.player.flag2 = data.pl_flag2_ready
 
         if resualt[-1]>0:
             """если игроку удалось поккушать, идет проверка на заражен или нет. при 1 - да. 
