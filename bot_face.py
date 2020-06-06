@@ -1,8 +1,7 @@
 """тут будуть методи, для взаємодії саме з ботом, обгортка для методів інших класів. """
 
 """набір фронтендів для взаємодій. Це єдине місце де код повинен бути завязаний на бота."""
-
-
+import threading
 import telegram
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler,
@@ -93,12 +92,21 @@ def start_reg(upd, con):
         mess_dispatcer(upd, con)
     else:
         rp.start_reg(upd, con, cur_game)
+        t=threading.Timer(10.0, myfun, [con])
+        t.start()
 
 
 def to_sity(upd, con):
     player=cur_game.players[upd.effective_chat.id]
-    player.sity = Sity(player, con)
+    player.sity = Sity(player, con, cur_game)
     return
+
+def myfun(con):
+    for pl in cur_game.players.values():
+        pl.blood-=1
+        print (f"current blood is{pl.blood}" )
+        con.bot.send_message(chat_id=pl.chat_id, text=f"current blood is{pl.blood}" )
+
 
 
 
@@ -115,6 +123,7 @@ def main():
 
     dp.add_error_handler(error)
     updater.start_polling()
+
 
 
 

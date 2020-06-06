@@ -14,9 +14,10 @@ import random as roll
 
 """а вот запускать его из плеера может быть хорошей идеей. тогда мжоно будет по плееру добраться к обработчику"""
 class Sity:
-    def __init__(self, player, context):
+    def __init__(self, player, con, cur_game):
+        self.context = con
+        self.cur_game = cur_game
         self.player = player
-        self.context = context
         self.can_walk_to = []
         self.walk_to = {}
         self.open_scene= ""
@@ -76,13 +77,13 @@ class Sity:
             resualt = data.data[self.walk_to][dis][2]
 
         self.player.blood += resualt[-1]
-        self.context.bot.send_message(chat_id=self.player.chat_id, text=resualt[0])
+        self.cur_game.mascarade += resualt[-2]
+        con.bot.send_message(chat_id=self.player.chat_id, text=resualt[0])
         self.player.walking.append(self.walk_to)
         self.player.flag2 = data.pl_flag2_ready
 
-        if resualt[-1]>0:
-            """если игроку удалось поккушать, идет проверка на заражен или нет. при 1 - да. 
-            можно выставить один из параметров в рандомизаторе на динамический"""
+        if resualt[-1] > 0:
+            """если игроку удалось поккушать, идет проверка на заражен или нет. """
             rr = roll.randint(1, 10)
             if rr >= data.rand_ill_chanse:
                 self.player.is_ill=True
