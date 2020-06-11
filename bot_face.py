@@ -18,6 +18,7 @@ from game import Gaming
 from sity import Sity
 import givingBLD as gb
 import eating as eat
+import kapella
 cur_game = Gaming()
 
 def error(update, context):
@@ -92,8 +93,7 @@ def start_reg(upd, con):
         mess_dispatcer(upd, con)
     else:
         rp.start_reg(upd, con, cur_game)
-        t=threading.Timer(10.0, myfun, [con])
-        t.start()
+
 
 
 def to_sity(upd, con):
@@ -123,6 +123,9 @@ def main():
 
     dp.add_error_handler(error)
     updater.start_polling()
+
+    t=threading.Thread(target=kapella.kapella_def_sys(cur_game, updater.bot))
+    t.start()
 
 
 
