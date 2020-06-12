@@ -2,7 +2,7 @@
 import sity
 import virus
 class Player:
-   def __init__(self,chatid):
+    def __init__(self,chatid):
        self.chat_id=chatid
        self.__name: str="undefined"
        self.__blood: int=0
@@ -16,60 +16,53 @@ class Player:
        self.sity: sity.Sity
 
 
-   @property
-   def walking(self):
+    @property
+    def walking(self):
        return self.__walking
 
-   @walking.setter
-   def walking(self, wa):
+    @walking.setter
+    def walking(self, wa):
        self.__walking.append(wa)
 
-   @property
-   def blood(self):
+    @property
+    def blood(self):
        return self.__blood
 
-   @blood.setter
-   def blood(self, bl):
+    @blood.setter
+    def blood(self, bl):
        if type(bl)==int or bl.isnumeric():
            self.__blood=int(bl)
            if self.__blood<0:
                self.__blood=0
 
-   @property
-   def name(self):
+    @property
+    def name(self):
        return self.__name
 
-   @name.setter
-   def name(self, nm):
+    @name.setter
+    def name(self, nm):
        self.__name=nm
 
-   @property
-   def is_ill(self):
+    @property
+    def is_ill(self):
        return self.__is_ill
 
-   @is_ill.setter
-   def is_ill(self, il):
+    @is_ill.setter
+    def is_ill(self, il):
        if type(il) == bool:
-           self.__is_ill=il
-           if il:
+           if not self.__is_ill and il:
                virus.start(self)
+
+           self.__is_ill=il
        return
 
 
-   def __str__(self):
+    def __str__(self):
         s= f"Name {self.__name} \n" \
            f"blood {self.__blood} \n" \
            f"ill {self.__is_ill}\n" \
            f"flag1 {self.flag1}, flag2 {self.flag2}"
         return s
 
-   def set_dysciplines(self):
-       return
-
-"""метод для дпотелиться кровью. метод для принятия крови. кровь сущность с именем параметром: заражен, параметром 
-сколько дает пунктов крови. чья. желательно добавить время ее жизни. 
-добавить игрокам параметр имунный. добавить игроку параметр уз крови. """
-
-
-"""додати смерть персонажа"""
-
+    def set_dysciplines(self):
+       pass
