@@ -19,6 +19,7 @@ from sity import Sity
 import givingBLD as gb
 import eating as eat
 import kapella
+import virus
 cur_game = Gaming()
 
 def error(update, context):
@@ -123,9 +124,11 @@ def main():
 
     dp.add_error_handler(error)
     updater.start_polling()
+    virus.bot = updater.bot
 
-    t=threading.Thread(target=kapella.kapella_def_sys(cur_game, updater.bot))
-    t.start()
+    cap=threading.Thread(target=kapella.kapella_def_sys(cur_game, updater.bot), daemon=True)
+    cap.start()
+
 
 
 

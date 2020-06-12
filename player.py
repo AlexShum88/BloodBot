@@ -1,6 +1,6 @@
 """файл класу гравця де його методи реєстрації, дій,"""
 import sity
-
+import virus
 class Player:
    def __init__(self,chatid):
        self.chat_id=chatid
@@ -51,6 +51,8 @@ class Player:
    def is_ill(self, il):
        if type(il) == bool:
            self.__is_ill=il
+           if il:
+               virus.start(self)
        return
 
 

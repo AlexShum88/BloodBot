@@ -52,6 +52,9 @@ menu_wrong_callback = "pleace, answer for current question"
 player_options = {"drink blood":"bld", "sity":"sity", "Use disceplines":"cast", "Fight":"fight",
     "give blood": "give_bld", "player data(for test)":"pldt"}
 
+desease1 = "you feel orgasm..."
+desease2 = "you feel hunger..."
+desease3 = "you feel dead..."
 
 clanes =["Nosferatu", "Tremere", "Toreador", "Ventru", "Brucha", "Malcovian"]
 
