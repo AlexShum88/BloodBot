@@ -44,6 +44,10 @@ def mess_dispatcer(upd, con):
         eat.eating(upd, con, cur_game)
     elif flag1 == data.pl_auto_sity:
         autorisation_sity(upd, con)
+    elif flag1 == data.pl_flag1_ready:
+        if cur_game.players[upd.effective_chat.id ].clan == "Malcovian":
+    #прием команд в строку для паутины. паутину отдельным потоком с рассылкой по выборке из малков и торей
+            pass
 
     return
 
