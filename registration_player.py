@@ -80,7 +80,7 @@ def reg_disciplines(upd, cont, cur_game):
     #for test
     if player.clan == "Malcovian":
         player.disciplines=['Стремительность', 'Затемнение', 'Могущество', data.no_dis_txt]
-        player.is_ill = True
+       # player.is_ill = True
 
     return
 

@@ -35,6 +35,7 @@ def pl_mess_bld_give_succs(cq, bld):
 pl_mess_bld_give_wrong_clb = "wrong callback"
 pl_mess_bld_point = "give only drop of blood"
 
+pl_auto_sity = "auto_sity"
 pl_sity_butt_need_blood = " need blood "
 pl_sity_no_more_walk = "no more variants to walk tru"
 
@@ -51,6 +52,9 @@ menu_wrong_callback = "pleace, answer for current question"
 
 player_options = {"drink blood":"bld", "sity":"sity", "Use disceplines":"cast", "Fight":"fight",
     "give blood": "give_bld", "player data(for test)":"pldt"}
+
+master_options = ["players", "blood", "masq", "role???", "else"]
+master_roles = ["dispatcher", "field", "ahch", "sity", "lilit", "else"]
 
 desease1 = "you feel orgasm..."
 desease2 = "you feel hunger..."

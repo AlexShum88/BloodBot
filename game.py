@@ -6,10 +6,10 @@ import player
 
 class Gaming:
     players= {}
-    masters={}
+    masters= {}
     blood_base = {}
     mascarade = 0
-
+    sity_key: int = 1234
     def regist_pl(self, id:int, play:player.Player):
         self.players[id]=play
         return
