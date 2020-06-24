@@ -52,6 +52,7 @@ def callback_dispatcher(upd, con):
     """эта шняга активируется когда прилетает саллбек от нажатия кнопки. он адолжна сначала посмотреть на флажок юзера,
     и решить с какой группой соотносить прилетевший каллбек. ну и потом соотнести и вызвать необходимую команду"""
     cq = upd.callback_query.data
+    con.bot.delete_message(chat_id=upd.effective_chat.id, message_id=upd.callback_query.message.message_id)
     try:
         player = cur_game.players[upd.effective_chat.id]
     except:
@@ -67,21 +68,24 @@ def callback_dispatcher(upd, con):
 
     elif flag2 == data.pl_flag2_sity:
         player.sity.listen_answer(upd, con)
-        player.sity = None
+        #player.sity = None
     elif flag2 == "master_role":
         cur_game.masters[upd.effective_chat.id].master_callback_listener(upd, con)
     elif flag2 == "master_todo":
         cur_game.masters[upd.effective_chat.id].cando_listner(upd, con)
 
     if flag1 == data.pl_flag1_ready and flag2 == data.pl_flag2_ready:
+
         if cq == data.player_options["give blood"]:
             gb.mess(upd, con, cur_game)
+
         elif cq == data.player_options["sity"]:
             upd.callback_query.message.reply_text("enter access sity code")
             cur_game.players[upd.effective_chat.id].flag1 = data.pl_auto_sity
 
         elif cq == data.player_options["drink blood"]:
             eat.mess(upd, con, cur_game)
+
         elif cq == data.player_options["player data(for test)"]: #player data
             upd.callback_query.message.reply_text(str(player))
 
@@ -109,8 +113,6 @@ def start_reg(upd, con):
     else:
         rp.start_reg(upd, con, cur_game)
 
-def make_sity_key(upd, con):
-    pass
 
 def autorisation_sity(upd, con):
     key = upd.message.text

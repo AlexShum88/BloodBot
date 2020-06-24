@@ -8,7 +8,7 @@ class Gaming:
     players= {}
     masters= {}
     blood_base = {}
-    mascarade = 0
+    mascarade = 1
     sity_key: int = 1234
     def regist_pl(self, id:int, play:player.Player):
         self.players[id]=play

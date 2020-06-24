@@ -37,6 +37,6 @@ def resualt(upd, con, cur_game):
         upd.callback_query.message.reply_text(text=data.pl_mess_bld_give_wrong_clb)
         return
     bld = Blood(cur_game.blood_base, cq, pl.is_ill, pl)
-    upd.callback_query.message.edit_reply_markup(reply_markup="")
+    #upd.callback_query.message.edit_reply_markup(reply_markup="")
     upd.callback_query.message.reply_text(text=data.pl_mess_bld_give_succs(cq, bld))
     cur_game.players[upd.effective_chat.id].flag2 =data.pl_flag2_ready

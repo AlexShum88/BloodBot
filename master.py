@@ -35,6 +35,7 @@ class Masta (player.Player):
         callback = upd.callback_query.data
         if callback == "dispatcher":
             self.cando.append("sity")
+            self.cando.append("masq")
         self.cando_board(upd, con)
 
     def cando_board (self, upd, con):
@@ -59,3 +60,22 @@ class Masta (player.Player):
         if callback == "sity":
             self.cur_game.sity_key = num_gen()
             upd.callback_query.message.reply_text("access to sity on {n}".format(n=self.cur_game.sity_key))
+        elif callback == "masq":
+            upd.callback_query.message.reply_text("mascarade = {n}".format(n=self.cur_game.mascarade))
+            keyb=[]
+            bt1 = InlineKeyboardButton(text="+", callback_data="+")
+            bt2 = InlineKeyboardButton(text="-", callback_data="-")
+            row = [bt1, bt2]
+            keyb.append(row)
+            reply_markup = InlineKeyboardMarkup(keyb)
+            self.flag2 = "master_todo"
+            con.bot.send_message(chat_id=self.chat_id, text="what you want ", reply_markup=reply_markup)
+            return
+        elif callback == "+":
+            self.cur_game.mascarade += 1
+            upd.callback_query.message.reply_text("mascarade = {n}".format(n=self.cur_game.mascarade))
+        elif callback == "-":
+            self.cur_game.mascarade -= 1
+            upd.callback_query.message.reply_text("mascarade = {n}".format(n=self.cur_game.mascarade))
+
+        self.cando_board(upd, con)
