@@ -9,7 +9,6 @@ from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, Call
                           ConversationHandler)
 import data
 
-
 import random as roll
 
 """а вот запускать его из плеера может быть хорошей идеей. тогда мжоно будет по плееру добраться к обработчику"""
@@ -21,20 +20,19 @@ class Sity:
         self.cur_game = cur_game
         self.player = player
         self.can_walk_to = []
-        self.walk_to = {}
+        self.walk_to = ""
         self.open_scene= ""
         self.dis_for_case = []
-        self.check_cases()
-        self.get_one_case()
+
         if self.player.clan == "Nosferatu":
             self.for_nos()
         else: self.make_message()
         self.player.flag2=data.pl_flag2_sity
 
 
-    def check_cases(self):
+    def check_cases(self, base = data.data):
         """формирует пул доступных случаев"""
-        for key in data.data.keys():
+        for key in base.keys():
             if key in self.player.walking:
                 continue
             else:
@@ -59,22 +57,23 @@ class Sity:
         self.context.bot.send_message(chat_id=self.player.chat_id, text="where you want to go?",
                               reply_markup=reply_markup)
 
-    def make_message(self):
+    def make_message(self, text=data.data):
         """созадет сообщение бота в формате: случай: дисциплины игрока и требуемая на их пременение кровь.
         пока не проверяет предварительно сколько крови у игрока. А надо бы. """
-
+        self.check_cases(base=text)
+        self.get_one_case()
         def make_board():
             keyb=[]
             for dis in self.player.disciplines:
-                if self.player.blood >= data.data[self.walk_to]["disciplines"][dis]["blood"]:
-                    butt_text = dis + data.pl_sity_butt_need_blood + str(data.data[self.walk_to]["disciplines"][dis]["blood"])
+                if self.player.blood >= text[self.walk_to]["disciplines"][dis]["blood"]:
+                    butt_text = dis + data.pl_sity_butt_need_blood + str(text[self.walk_to]["disciplines"][dis]["blood"])
                     butt = InlineKeyboardButton(text=butt_text, callback_data=dis)
                     row=[butt]
                     keyb.append(row)
             reply_markup=InlineKeyboardMarkup(keyb)
             return reply_markup
 
-        self.context.bot.send_message(chat_id=self.player.chat_id, text=data.data[self.walk_to]["open"], reply_markup=make_board())
+        self.context.bot.send_message(chat_id=self.player.chat_id, text=text[self.walk_to]["open"], reply_markup=make_board())
 
 
     def listen_answer(self, upd, con):
@@ -84,14 +83,14 @@ class Sity:
 
         dis = upd.callback_query.data
 
-        def __sity_do(good=1, bad=2):
-            self.player.blood -= data.data[self.walk_to]["disciplines"][dis]["blood"]
+        def __sity_do(good=1, bad=2, base=data.data):
+            self.player.blood -= base[self.walk_to]["disciplines"][dis]["blood"]
             rr = roll.randint(1, 6)
             if rr >= data.rand_dis_fail:
-                resualt = data.data[self.walk_to]["disciplines"][dis]["variants"][good]
+                resualt = base[self.walk_to]["disciplines"][dis]["variants"][good]
 
             else:
-                resualt = data.data[self.walk_to]["disciplines"][dis]["variants"][bad]
+                resualt = base[self.walk_to]["disciplines"][dis]["variants"][bad]
 
             self.player.blood += resualt['blood']
             self.cur_game.mascarade += resualt['msq']
@@ -109,14 +108,20 @@ class Sity:
             self.make_message()
             return
         elif upd.callback_query.data == "to canalization":
-            pass
+            self.make_message(text=data.canal_data)
+            return
 
         if upd.callback_query.data in self.player.disciplines:
+            base = data.data
+            if str(self.walk_to)[-1] == "k":
+                base = data.canal_data
             if upd.callback_query.data == data.no_dis_txt:
                 msq = self.cur_game.mascarade
-                __sity_do(good=(msq*2-1), bad=(msq*2))
-                print("msq = {m} good= {g}, bad ={b}".format(m=msq, g=(msq*2-1), b=(msq*2)))
+                try:
+                    __sity_do(good=(msq*2-1), bad=(msq*2), base=base)
+                except: __sity_do(base=base)
+
             else:
-                __sity_do()
+                __sity_do(base=base)
         else:
             upd.callback_query.message.reply_text("please, answer sity question")
