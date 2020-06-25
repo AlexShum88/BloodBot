@@ -4,7 +4,7 @@
 token = '801929360:AAF_x6vrGk6JGargW4RsDkzxUaAa5FXMQqs'
 
 no_dis_txt = 'Без применения дисциплин'
-
+capella_timer = 120
 #inner commands
 pl_flag1_reg = 1
 pl_flag1_ready = 2
@@ -61,6 +61,9 @@ desease2 = "you feel hunger..."
 desease3 = "you feel dead..."
 
 clanes =["Nosferatu", "Tremere", "Toreador", "Ventru", "Brucha", "Malcovian"]
+
+gorguls_user = {"PAN":"17891798", "Smurf":"12341234", "Lazar":"qwer1234", "dishwasher1":"", "dishwasher2": "",
+                "dishwasher7":""}
 
 data = {
     1:{

@@ -1,4 +1,5 @@
-"""файл майстера, що буде отримувати дані про гравців та давати можливість руководити"""
+"""это мастер. мастер это прдвнуый игрок, ибо мне в лом было выделять отдельно пользователя
+ и от него наследовать и мастера и игрока. игрок просто уже был"""
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler,
                           ConversationHandler)
@@ -19,8 +20,9 @@ class Masta (player.Player):
         self.cando = ["monitor"]
         self.cur_game = cur_game
 
-    master_roles = ["dispatcher", "field", "ahch", "sity", "lilit", "else"]
+
     def reg_role(self, upd, cont):
+        """это для определения роли мастера, скорее всего не нужная хрень"""
         keyb = []
         for role in data.master_roles:
             bt = InlineKeyboardButton(text=role, callback_data=role)
@@ -32,6 +34,7 @@ class Masta (player.Player):
         return
 
     def master_callback_listener (self, upd, con):
+        """слушатель для кнопок, что прилетают от мастеров ДЛЯ ВЫБОРА РОЛИ"""
         callback = upd.callback_query.data
         if callback == "dispatcher":
             self.cando.append("sity")
@@ -39,6 +42,7 @@ class Masta (player.Player):
         self.cando_board(upd, con)
 
     def cando_board (self, upd, con):
+        """создает кнопки в зависимости от доступных мастеру функций"""
         keyb = []
         for do in self.cando:
             bt = InlineKeyboardButton(text=do, callback_data=do)
@@ -50,8 +54,9 @@ class Masta (player.Player):
         return
 
     def cando_listner (self, upd, con):
-
+        """слуашет, что мостер хочет сделать"""
         def num_gen():
+            """генератор случайных чисел. нужен для ключей города"""
             rr = roll.randint(1000, 8999)
             return rr
 
@@ -61,6 +66,7 @@ class Masta (player.Player):
             self.cur_game.sity_key = num_gen()
             upd.callback_query.message.reply_text("access to sity on {n}".format(n=self.cur_game.sity_key))
         elif callback == "masq":
+            """дает инфу о текущем положении маскарада, и дает кнопки для регулировки"""
             upd.callback_query.message.reply_text("mascarade = {n}".format(n=self.cur_game.mascarade))
             keyb=[]
             bt1 = InlineKeyboardButton(text="+", callback_data="+")

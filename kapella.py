@@ -1,15 +1,14 @@
-"""тут логіка капелли, А саме система забору крові за перебування у капеллі"""
 
-"""звертатись до пакунку гравців та знімати з кожного з них поінт крові, коли до того прийде час. ймовірно для цього 
-потрібно освоїти паралельні потоки """
 import logging
 import threading
 import time
 import data
 
 def kapella_def_sys(cur_game, bot):
+    """эта штука раз по таймеру проверяет какие у нас есть игроки. Есди игрок не в городе (а значит он в капелле)
+    она его ебает на 1 крови"""
     while True:
-        time.sleep(120)
+        time.sleep(data.capella_timer)
         for pl in cur_game.players.values():
             if pl.flag2 == data.pl_flag2_sity:
                 continue

@@ -1,6 +1,4 @@
-"""тут будуть методи, для взаємодії саме з ботом, обгортка для методів інших класів. """
-
-"""набір фронтендів для взаємодій. Це єдине місце де код повинен бути завязаний на бота."""
+"""основной файл. сюда прилетают все сообщения и далее распределяются на выполнение"""
 import threading
 import telegram
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
@@ -21,6 +19,7 @@ import eating as eat
 import kapella
 import virus
 import master
+import gorgona
 cur_game = Gaming()
 
 def error(update, context):
@@ -53,10 +52,14 @@ def mess_dispatcer(upd, con):
 
 
 def callback_dispatcher(upd, con):
-    """эта шняга активируется когда прилетает саллбек от нажатия кнопки. он адолжна сначала посмотреть на флажок юзера,
+    """эта шняга активируется когда прилетает каллбек от нажатия кнопки. она должна сначала посмотреть на флажок юзера,
     и решить с какой группой соотносить прилетевший каллбек. ну и потом соотнести и вызвать необходимую команду"""
     cq = upd.callback_query.data
     con.bot.delete_message(chat_id=upd.effective_chat.id, message_id=upd.callback_query.message.message_id)
+    """сачала она ищет юзера в игрока, и если не найдет, то будет смотреть среди мастеров"""
+    if upd.effective_chat.id in cur_game.gorgul:
+        gorgona.listener(upd, con)
+        return
     try:
         player = cur_game.players[upd.effective_chat.id]
     except:
@@ -119,6 +122,7 @@ def start_reg(upd, con):
 
 
 def autorisation_sity(upd, con):
+    """это запускается когда игрок выбирает поход в город и спрашивает его за ключ к городу. если правильный ключ - пустит"""
     key = upd.message.text
     if key.isnumeric():
         key = int(key)
@@ -130,12 +134,14 @@ def autorisation_sity(upd, con):
     cur_game.players[upd.effective_chat.id].flag1=data.pl_flag1_ready
 
 def to_sity(upd, con):
+    """собственно запуск города для юзера"""
     player=cur_game.players[upd.effective_chat.id]
     player.sity = Sity(player, con, cur_game)
     cur_game.sity_key = 100500
     return
 
 def myfun(con):
+    """КАПЕЛЛА! (зачем он здесь????)"""
     for pl in cur_game.players.values():
         pl.blood-=1
         print (f"current blood is{pl.blood}" )
@@ -143,6 +149,8 @@ def myfun(con):
 
 
 def master_ops(upd, con):
+    """вызывается мастерской командой. если такого мастера еще нет в списке - записывает,
+    если есть - выдает список команд, что ему доступны"""
     mast = master.Masta(upd.effective_chat.id, cur_game)
     if mast not in cur_game.masters:
         cur_game.masters[upd.effective_chat.id] = mast
@@ -157,6 +165,9 @@ def master_ops(upd, con):
         upd.message.reply_text(data.menu_chouse, reply_markup=reply_markup)
     return
 
+def gorgulia_start(upd, con):
+    pass
+
 def main():
     updater = Updater(token=data.token, use_context=True, request_kwargs={
         'read_timeout':6,
@@ -167,6 +178,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.text, mess_dispatcer), group=1)
     dp.add_handler(CallbackQueryHandler(callback_dispatcher), group=1)
     dp.add_handler(CommandHandler('par', master_ops))
+    dp.add_handler(CommandHandler('gurgulet', gorgulia_start))
 
     dp.add_error_handler(error)
     updater.start_polling()

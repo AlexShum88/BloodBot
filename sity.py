@@ -1,8 +1,5 @@
-"""методи міста. Його логіка"""
+"""город. и канализация. и голод тоже тут будет"""
 
-"""сюди зввертається метод гравця полювання. тут проходить перевірка куди персонаж вже ходив, та створюється 
-індивідуальний набір доступних прогулянок. проходить рандомний вибір прогулянки, та вибираються доступні гравцеві 
-дії. """
 import telegram
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler,
@@ -11,7 +8,7 @@ import data
 
 import random as roll
 
-"""а вот запускать его из плеера может быть хорошей идеей. тогда мжоно будет по плееру добраться к обработчику"""
+
 
 
 class Sity:
@@ -23,7 +20,6 @@ class Sity:
         self.walk_to = ""
         self.open_scene= ""
         self.dis_for_case = []
-
         if self.player.clan == "Nosferatu":
             self.for_nos()
         else: self.make_message()
@@ -31,7 +27,7 @@ class Sity:
 
 
     def check_cases(self, base = data.data):
-        """формирует пул доступных случаев"""
+        """формирует пул доступных случаев. база оприделяет то есть город или подгород"""
         for key in base.keys():
             if key in self.player.walking:
                 continue
@@ -48,6 +44,7 @@ class Sity:
 
 
     def for_nos (self):
+        """штука для оссобенных. создает кнопки на выбор в город или в подгород"""
         keyb=[]
         butt = InlineKeyboardButton(text="to sity", callback_data="to sity")
         butt2 = InlineKeyboardButton(text="to canalization", callback_data="to canalization")
@@ -59,7 +56,7 @@ class Sity:
 
     def make_message(self, text=data.data):
         """созадет сообщение бота в формате: случай: дисциплины игрока и требуемая на их пременение кровь.
-        пока не проверяет предварительно сколько крови у игрока. А надо бы. """
+        """
         self.check_cases(base=text)
         self.get_one_case()
         def make_board():
@@ -78,12 +75,12 @@ class Sity:
 
     def listen_answer(self, upd, con):
         """слушает ответ игрока, получив - уберает слушатель, псоле чего делает проверку на удачность случая.
-        проводит изменения параметров игрока. мне не нравится привязка по индексу.
-        надо как-то реализовать увеличение маскарада"""
+        проводит изменения параметров игрока. """
 
         dis = upd.callback_query.data
 
         def __sity_do(good=1, bad=2, base=data.data):
+            """процесс определения результата города для игрока"""
             self.player.blood -= base[self.walk_to]["disciplines"][dis]["blood"]
             rr = roll.randint(1, 6)
             if rr >= data.rand_dis_fail:
@@ -103,7 +100,7 @@ class Sity:
                 rr = roll.randint(1, 10)
                 if rr >= data.rand_ill_chanse:
                     self.player.is_ill = True
-
+        """ниже реакции на слушатель кнопок для носферату"""
         if upd.callback_query.data == "to sity":
             self.make_message()
             return
@@ -112,10 +109,14 @@ class Sity:
             return
 
         if upd.callback_query.data in self.player.disciplines:
+            """это реакция на нажатие кнопки дисциплины.
+            если имя этого случая заканчивается на К - это канализация. соответственно читать надо из канализации"""
             base = data.data
             if str(self.walk_to)[-1] == "k":
                 base = data.canal_data
             if upd.callback_query.data == data.no_dis_txt:
+                """если выбрана без дисциплины, то надо смотреть на уровень маскарада для определения какую пару брать
+                НО если таких пар нет(как бывает в канализации, то просто брать по умолчанию"""
                 msq = self.cur_game.mascarade
                 try:
                     __sity_do(good=(msq*2-1), bad=(msq*2), base=base)
