@@ -1,19 +1,26 @@
 """файл класу гравця де його методи реєстрації, дій,"""
 import sity
 import virus
+
+
 class Player:
     def __init__(self,chatid):
-       self.chat_id=chatid
-       self.__name: str="undefined"
-       self.__blood: int=0
-       self.clan = "undefined"
-       self.__walking=list()  #список місчь куди ця падла вже ходила
-       self.disciplines=[]  #виставляється вибором клану, чи все таки вручну?
-       self.__is_ill=False
-       self.now_walk=[]
-       self.flag1 ="start" #its pl status: ono registration, on game, on torpor, dead?....
-       self.flag2 = "start" #its for change callback listener
-       self.sity: sity.Sity
+        self.chat_id=chatid
+        self.__name: str="undefined"
+        self.__blood: int=0
+        self.clan = "undefined"
+        self.__walking=list()  #список місчь куди ця падла вже ходила
+        self.disciplines=[]  #виставляється вибором клану, чи все таки вручну?
+        self.__is_ill=False
+        self.now_walk=[]
+        self.flag1 ="start" #its pl status: ono registration, on game, on torpor, dead?....
+        self.flag2 = "start" #its for change callback listener
+        self.sity: sity.Sity
+        self.status = "normal"
+        self.hp = 5
+        self.bloodlines = 0
+        self.fight = ""
+
 
 
     @property

@@ -25,14 +25,16 @@ def form_bord_user(upd, con):
 
 def listen_password(upd, con):
     answer = upd.message.text
-    superus = tuple(data.gorguls_user.keys())[0]
-    if answer == superus:
-        con.bot.send_message(chat_id=upd.effective_chat.id, text="hello my lord. its realy you?")
-        current_user = superus
+    if answer == data.gorguls_user[current_user]:
+        con.bot.send_message(chat_id=upd.effective_chat.id, text="great. you autorization on lab {n}".format(n=1247))
+
+
 
 
 def listener(upd, con):
     """в дате должен лежать словарь в котором будут ключи - имена сотрудников, а содержимое - их рпароли
-    должен быть метод, что формирует кнопки из ключей (КРОМЕ НУЛЕКОВГО, КТОРОРЫЙ СУПЕРЮЗЕР!!!)
-    должен быть метод,, что после нажатия кнопки слушает что напишет игрок (слушает пароль)"""
+    должен быть метод, что формирует кнопки из ключей
+    должен быть метод, что после нажатия кнопки слушает что напишет игрок (слушает пароль)"""
     cq = upd.callback_query.data
+    con.bot.send_message(chat_id=upd.effective_chat.id, text="hello my lord. its realy you? enter pass please")
+    current_user = cq

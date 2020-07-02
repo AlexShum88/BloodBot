@@ -1,4 +1,4 @@
-import player
+
 import threading
 import time
 import data
@@ -6,7 +6,7 @@ import data
 bot:object = 0
 
 
-def start(pat:player.Player):
+def start(pat):
     """овздает новый поток для конкретного игрока с болячкой. ПАТ  - это аргумент именно плеера """
     print("start desease")
     bot.send_message(chat_id=pat.chat_id, text="ill comming")
@@ -14,7 +14,7 @@ def start(pat:player.Player):
     vir.start()
 
 
-def desease(pat:player.Player):
+def desease(pat):
     time.sleep(5)
     bot.send_message(chat_id=pat.chat_id, text=data.desease1)
     time.sleep(6)

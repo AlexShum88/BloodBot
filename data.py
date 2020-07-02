@@ -4,7 +4,7 @@
 token = '801929360:AAF_x6vrGk6JGargW4RsDkzxUaAa5FXMQqs'
 
 no_dis_txt = 'Без применения дисциплин'
-capella_timer = 120
+capella_timer = 360
 #inner commands
 pl_flag1_reg = 1
 pl_flag1_ready = 2
@@ -14,6 +14,7 @@ pl_flag2_reg_dis = 4
 pl_flag2_sity = 5
 pl_flag2_givebld = 6
 pl_flag2_ready = 22
+pl_flag2_fight = 44
 
 
 # rand parameters
@@ -50,8 +51,8 @@ reg_blood_nonum = "enter num, please"
 menu_chouse = "Your variants to do "
 menu_wrong_callback = "pleace, answer for current question"
 
-player_options = {"drink blood":"bld", "sity":"sity", "Use disceplines":"cast", "Fight":"fight",
-    "give blood": "give_bld", "player data(for test)":"pldt"}
+player_options = {"drink blood":"bld", "sity":"sity", "Use disceplines":"cast", "Fight":"fight", "Fight2":"fight2",
+    "give blood": "give_bld", "player data(for test)":"pldt", "Regeneration": "regen"}
 
 master_options = ["players", "blood", "masq", "role???", "else"]
 master_roles = ["dispatcher", "field", "ahch", "sity", "lilit", "else"]
@@ -62,8 +63,11 @@ desease3 = "you feel dead..."
 
 clanes =["Nosferatu", "Tremere", "Toreador", "Ventru", "Brucha", "Malcovian"]
 
-gorguls_user = {"PAN":"17891798", "Smurf":"12341234", "Lazar":"qwer1234", "dishwasher1":"", "dishwasher2": "",
-                "dishwasher7":""}
+gorguls_user = {"PAN":"17891798", "Smurf":"12341234", "Lazar":"qwer1234"}
+
+lab_option = ["library", "lab code"]
+
+colour = ["red", "blue", "green"]
 
 data = {
     1:{

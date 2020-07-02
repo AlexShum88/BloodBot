@@ -10,6 +10,7 @@ class Gaming:
     mascarade = 1
     sity_key: int = 1234
     gorgul = []
+    lab_keys = []
 
     def regist_pl(self, id:int, play:player.Player):
         self.players[id]=play

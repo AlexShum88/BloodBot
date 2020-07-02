@@ -20,6 +20,7 @@ import kapella
 import virus
 import master
 import gorgona
+import fight
 cur_game = Gaming()
 
 def error(update, context):
@@ -76,6 +77,10 @@ def callback_dispatcher(upd, con):
     elif flag2 == data.pl_flag2_sity:
         player.sity.listen_answer(upd, con)
         #player.sity = None
+
+    elif flag2 == data.pl_flag2_fight:
+        player.fight.listener(upd, con)
+
     elif flag2 == "master_role":
         cur_game.masters[upd.effective_chat.id].master_callback_listener(upd, con)
     elif flag2 == "master_todo":
@@ -95,6 +100,16 @@ def callback_dispatcher(upd, con):
 
         elif cq == data.player_options["player data(for test)"]: #player data
             upd.callback_query.message.reply_text(str(player))
+
+        elif cq == data.player_options["Fight"]:
+            if type(player.fight) != fight.Fight:
+                player.fight = fight.Fight(player)
+            player.fight.listener(upd, con)
+
+        elif cq == data.player_options["Fight2"]:
+            if type(player.fight) != fight.Fight:
+                player.fight = fight.Fight2(player)
+            player.fight.listener(upd, con)
 
         else:
             upd.callback_query.message.reply_text(data.menu_wrong_callback)
