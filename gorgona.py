@@ -11,30 +11,32 @@ from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, Call
                           ConversationHandler)
 import data
 
-current_user = ""
+class Gorgona:
 
-def form_bord_user(upd, con):
-    keyb = []
-    for user in data.gorguls_user.keys():
-        bt = InlineKeyboardButton(text=user, callback_data=user)
-        row = [bt]
-        keyb.append(row)
-    reply_markup = InlineKeyboardMarkup(keyb)
-    upd.message.reply_text(data.menu_chouse, reply_markup=reply_markup)
-    return
+    current_user = ""
 
-def listen_password(upd, con):
-    answer = upd.message.text
-    if answer == data.gorguls_user[current_user]:
-        con.bot.send_message(chat_id=upd.effective_chat.id, text="great. you autorization on lab {n}".format(n=1247))
+    def form_bord_user(self, upd, con):
+        keyb = []
+        for user in data.gorguls_user.keys():
+            bt = InlineKeyboardButton(text=user, callback_data=user)
+            row = [bt]
+            keyb.append(row)
+        reply_markup = InlineKeyboardMarkup(keyb)
+        upd.message.reply_text(data.menu_chouse, reply_markup=reply_markup)
+        return
+
+    def listen_password(self, upd, con):
+        answer = upd.message.text
+        if answer == data.gorguls_user[self.current_user]:
+            con.bot.send_message(chat_id=upd.effective_chat.id, text="great. you autorization on lab {n}".format(n=1247))
 
 
 
 
-def listener(upd, con):
-    """в дате должен лежать словарь в котором будут ключи - имена сотрудников, а содержимое - их рпароли
-    должен быть метод, что формирует кнопки из ключей
-    должен быть метод, что после нажатия кнопки слушает что напишет игрок (слушает пароль)"""
-    cq = upd.callback_query.data
-    con.bot.send_message(chat_id=upd.effective_chat.id, text="hello my lord. its realy you? enter pass please")
-    current_user = cq
+    def listener(self, upd, con):
+        """в дате должен лежать словарь в котором будут ключи - имена сотрудников, а содержимое - их рпароли
+        должен быть метод, что формирует кнопки из ключей
+        должен быть метод, что после нажатия кнопки слушает что напишет игрок (слушает пароль)"""
+        cq = upd.callback_query.data
+        con.bot.send_message(chat_id=upd.effective_chat.id, text="hello my lord. its realy you? enter pass please")
+        self.current_user = cq

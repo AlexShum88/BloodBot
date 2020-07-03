@@ -93,7 +93,8 @@ class Fight2 (Fight):
     def ft_roll (self, upd, con):
         rr = roll.randint(1, 10)
         res = rr + int(self.bld)
-        con.bot.send_message(chat_id=self.player.chat_id, text=f"{self.dis} \n {res}")
+        con.bot.send_message(chat_id=self.player.chat_id, text=f"{self.dis} \n{self.player.dis_for_fight[self.dis]} \n"
+                                                               f"resualt is {res}")
         self.player.flag2 = data.pl_flag2_ready
         self.player.fight = ""
         return

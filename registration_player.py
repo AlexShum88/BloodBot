@@ -73,17 +73,49 @@ def reg_disciplines(upd, cont, cur_game):
     cq = upd.callback_query.data
     player = cur_game.players[upd.effective_chat.id]
     cur_game.players[upd.effective_chat.id].clan = cq
-    print(player.name, player.blood, player.clan)
-    cont.bot.send_message(chat_id=upd.effective_chat.id, text=data.reg_ready+"\n"+str(player))
-    player.flag1 = data.pl_flag1_ready
-    player.flag2 = data.pl_flag2_ready
-    #for test
-    if player.clan == "Malcovian":
-        player.disciplines=['Стремительность', 'Затемнение', 'Могущество', data.no_dis_txt]
-       # player.is_ill = True
-    if player.clan == "Nosferatu":
-        player.disciplines=["Могущество", "Затемнение", "Анимализм", data.no_dis_txt]
+    for dis in data.clanes[cq]:
+        player.disciplines.append(dis)
+        player.dis_for_fight[dis]=data.disciplines[dis]
+    if "Тауматургия" in player.disciplines:
+        taumturg_menu(upd, cont, cur_game)
+        player.flag2 = data.pl_flag2_tau
+    else:
+        end_reg(upd, cont, cur_game)
+    return
+
+def taumturg_menu(upd, con, cur_game):
+    player = cur_game.players[upd.effective_chat.id]
+    con.bot.send_message(chat_id=upd.effective_chat.id, text="for fight get another disciplines property")
+    def sett_butt():
+        keyb = []
+        bt = InlineKeyboardButton(text=dis, callback_data=dis)
+        row = [bt]
+        keyb.append(row)
+        reply_markup = InlineKeyboardMarkup(keyb)
+        return reply_markup
+
+    for dis in data.disciplines.keys():
+        if dis in player.disciplines:
+            continue
+        con.bot.send_message(chat_id=upd.effective_chat.id, text=f"{dis} \n {data.disciplines[dis]}",
+                             reply_markup=sett_butt())
 
     return
 
+def taumaturg_listener(upd, con, cur_game):
+    cq = upd.callback_query.data
+    player = cur_game.players[upd.effective_chat.id]
+    player.dis_for_fight["Тауматургия"]= data.disciplines[cq]
+    con.bot.send_message(chat_id=upd.effective_chat.id, text="true")
+    for i in range(6):
+        con.bot.delete_message(chat_id=upd.effective_chat.id, message_id=upd.message.message_id-i)
+    end_reg(upd, con, cur_game)
+    return
 
+def end_reg(upd, con, cur_game):
+    player = cur_game.players[upd.effective_chat.id]
+    player.disciplines.append(data.no_dis_txt)
+    print(player.name, player.blood, player.clan)
+    con.bot.send_message(chat_id=upd.effective_chat.id, text=data.reg_ready + "\n" + str(player))
+    player.flag1 = data.pl_flag1_ready
+    player.flag2 = data.pl_flag2_ready

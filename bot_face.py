@@ -32,6 +32,9 @@ def error(update, context):
 def mess_dispatcer(upd, con):
     """сюда поступает основной поток текстовых сообщений от пользователя
     и производится выборка что дальше этому пользователю запускать"""
+    if upd.effective_chat.id in cur_game.gorgul:
+        cur_game.gorgul[upd.effective_chat.id].listen_password(upd, con)
+        return
     if upd.effective_chat.id in cur_game.players:
         flag1 = cur_game.players[upd.effective_chat.id].flag1
         print(flag1)
@@ -59,7 +62,7 @@ def callback_dispatcher(upd, con):
     con.bot.delete_message(chat_id=upd.effective_chat.id, message_id=upd.callback_query.message.message_id)
     """сачала она ищет юзера в игрока, и если не найдет, то будет смотреть среди мастеров"""
     if upd.effective_chat.id in cur_game.gorgul:
-        gorgona.listener(upd, con)
+        cur_game.gorgul[upd.effective_chat.id].listener(upd, con)
         return
     try:
         player = cur_game.players[upd.effective_chat.id]
@@ -77,6 +80,8 @@ def callback_dispatcher(upd, con):
     elif flag2 == data.pl_flag2_sity:
         player.sity.listen_answer(upd, con)
         #player.sity = None
+    elif flag2 == data.pl_flag2_tau:
+        rp.taumaturg_listener(upd, con, cur_game)
 
     elif flag2 == data.pl_flag2_fight:
         player.fight.listener(upd, con)
@@ -181,8 +186,8 @@ def master_ops(upd, con):
     return
 
 def gorgulia_start(upd, con):
-    pass
-
+    cur_game.gorgul[upd.effective_chat.id]= gorgona.Gorgona()
+    cur_game.gorgul[upd.effective_chat.id].form_bord_user(upd, con)
 def main():
     updater = Updater(token=data.token, use_context=True, request_kwargs={
         'read_timeout':6,

@@ -20,6 +20,7 @@ class Player:
         self.hp = 5
         self.bloodlines = 0
         self.fight = ""
+        self.dis_for_fight = {}
 
 
 

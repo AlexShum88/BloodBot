@@ -9,7 +9,7 @@ class Gaming:
     blood_base = {}
     mascarade = 1
     sity_key: int = 1234
-    gorgul = []
+    gorgul = { }
     lab_keys = []
 
     def regist_pl(self, id:int, play:player.Player):
