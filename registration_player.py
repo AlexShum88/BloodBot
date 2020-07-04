@@ -85,32 +85,42 @@ def reg_disciplines(upd, cont, cur_game):
 
 def taumturg_menu(upd, con, cur_game):
     player = cur_game.players[upd.effective_chat.id]
-    con.bot.send_message(chat_id=upd.effective_chat.id, text="for fight get another disciplines property")
-    def sett_butt():
-        keyb = []
-        bt = InlineKeyboardButton(text=dis, callback_data=dis)
-        row = [bt]
-        keyb.append(row)
-        reply_markup = InlineKeyboardMarkup(keyb)
-        return reply_markup
-
+    keyb=[]
     for dis in data.disciplines.keys():
         if dis in player.disciplines:
             continue
-        con.bot.send_message(chat_id=upd.effective_chat.id, text=f"{dis} \n {data.disciplines[dis]}",
-                             reply_markup=sett_butt())
 
+        bt=InlineKeyboardButton(text=f"{dis}", callback_data=dis)
+        row=[bt]
+        keyb.append(row)
+    reply_markup=InlineKeyboardMarkup(keyb)
+    con.bot.send_message(chat_id=upd.effective_chat.id, text="for fight get another disciplines property (click to read more)",
+                             reply_markup=reply_markup)
     return
 
 def taumaturg_listener(upd, con, cur_game):
+
+    def tf_nemu():
+        keyb=[]
+        bt_tr=InlineKeyboardButton(text=f"Accept", callback_data="+")
+        bt_fls= InlineKeyboardButton(text=f"return", callback_data="-")
+        row1=[bt_tr]
+        row2=[bt_fls]
+        keyb.append(row1)
+        keyb.append(row2)
+        reply_markup=InlineKeyboardMarkup(keyb)
+        return reply_markup
+
     cq = upd.callback_query.data
     player = cur_game.players[upd.effective_chat.id]
-    player.dis_for_fight["Тауматургия"]= data.disciplines[cq]
-    con.bot.send_message(chat_id=upd.effective_chat.id, text="true")
-    for i in range(6):
-        con.bot.delete_message(chat_id=upd.effective_chat.id, message_id=upd.message.message_id-i)
-    end_reg(upd, con, cur_game)
-    return
+    if cq in data.disciplines.keys():
+        con.bot.send_message(chat_id=upd.effective_chat.id, text=f"{cq} \n {data.disciplines[cq]}", reply_markup=tf_nemu())
+    elif cq == "+":
+        player.dis_for_fight["Тауматургия"] = data.disciplines[upd.callback_query.message.text.split()[0]]
+        end_reg(upd, con, cur_game)
+    elif cq == "-":
+        taumturg_menu(upd, con, cur_game)
+
 
 def end_reg(upd, con, cur_game):
     player = cur_game.players[upd.effective_chat.id]
