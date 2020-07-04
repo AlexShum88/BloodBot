@@ -41,6 +41,8 @@ pl_auto_sity = "auto_sity"
 pl_sity_butt_need_blood = " need blood "
 pl_sity_no_more_walk = "no more variants to walk tru"
 
+fight_stat = ["atacker","defender"]
+
 reg_listen_name = "Im listen to your name "
 reg_listen_blood = "Iv listen for your blood"
 reg_listen_clan = "Im listen for your clan"

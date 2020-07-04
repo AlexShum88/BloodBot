@@ -125,6 +125,7 @@ def taumaturg_listener(upd, con, cur_game):
 def end_reg(upd, con, cur_game):
     player = cur_game.players[upd.effective_chat.id]
     player.disciplines.append(data.no_dis_txt)
+    player.dis_for_fight[data.no_dis_txt] = data.no_dis_txt
     print(player.name, player.blood, player.clan)
     con.bot.send_message(chat_id=upd.effective_chat.id, text=data.reg_ready + "\n" + str(player))
     player.flag1 = data.pl_flag1_ready

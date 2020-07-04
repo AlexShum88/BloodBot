@@ -21,6 +21,8 @@ class Player:
         self.bloodlines = 0
         self.fight = ""
         self.dis_for_fight = {}
+        self.fight_stat = ""
+        self.weapons = []
 
 
 

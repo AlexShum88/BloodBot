@@ -188,6 +188,8 @@ def master_ops(upd, con):
 def gorgulia_start(upd, con):
     cur_game.gorgul[upd.effective_chat.id]= gorgona.Gorgona()
     cur_game.gorgul[upd.effective_chat.id].form_bord_user(upd, con)
+
+
 def main():
     updater = Updater(token=data.token, use_context=True, request_kwargs={
         'read_timeout':6,
